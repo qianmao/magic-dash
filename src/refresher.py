@@ -14,7 +14,9 @@ CRYPTO_SYMBOL_FUNC_DICT = {
     'omg/usd': [queryer.query_omg_usd, display_utils.format_omg_usd_display],
     'nkn/usd': [queryer.query_nkn_usd, display_utils.format_nkn_usd_display],
     'shib/usd': [queryer.query_shib_usd, display_utils.format_shib_usd_display],
-    'sol/usd': [queryer.query_sol_usd, display_utils.format_sol_usd_display]
+    'sol/usd': [queryer.query_sol_usd, display_utils.format_sol_usd_display],
+    'boba/usd': [queryer.query_boba_usd, display_utils.format_boba_usd_display],
+    'matic/usd': [queryer.query_matic_usd, display_utils.format_matic_usd_display]
 }
 
 ME_NFT_COLLECTION_ICON_IMAGE = {

@@ -37,6 +37,14 @@ def query_sol_usd():
         res = _query_crypto('solana', 'usd')
         return res['solana']['usd'], res['solana']['usd_24h_change']
 
+def query_boba_usd():
+        res = _query_crypto('boba-network', 'usd')
+        return res['boba-network']['usd'], res['boba-network']['usd_24h_change']
+
+def query_matic_usd():
+        res = _query_crypto('matic-network', 'usd')
+        return res['matic-network']['usd'], res['matic-network']['usd_24h_change']
+
 def query_me_nft_collection_stats(symbol):
         res = requests.get(ME_API_COLLECTION_STATS_URL.format(symbol), headers={'Authorization': 'Bearer d1968b2f-064b-485d-83af-c074a0dee657'}).json()
         print(symbol)

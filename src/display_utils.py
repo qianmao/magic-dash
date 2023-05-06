@@ -81,6 +81,12 @@ def format_shib_usd_display(price, pct_change):
 def format_sol_usd_display(price, pct_change):
     return _format_crypto_display('SOL/USD', 'sol-logo_32x32.png', price, pct_change)
 
+def format_boba_usd_display(price, pct_change):
+    return _format_crypto_display('BOBA/USD', 'boba-logo_32x32.png', price, pct_change)
+
+def format_matic_usd_display(price, pct_change):
+    return _format_crypto_display('MATIC/USD', 'matic-logo_32x32.png', price, pct_change)
+
 def format_magiceden_logo():
     logo_file = '{0}/{1}/{2}'.format(CURRENT_DIR_PATH, 'logo', 'magiceden-full-logo.png')
     image = Image.open(logo_file).resize((170, 32)).convert('RGB')

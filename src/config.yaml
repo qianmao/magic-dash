@@ -3,14 +3,16 @@ monitoring_list:
       - BTC/USD
       - ETH/USD
       - OMG/USD
+      - BOBA/USD
+      - MATIC/USD
       - NKN/USD
       - DOGE/USD
       - SHIB/USD
       - SOL/USD
   nft:
     collection:
-      - trippin_ape_tribe
+      # - trippin_ape_tribe
       - okay_bears
       - degods
-      - suteki
+      # - suteki
  
