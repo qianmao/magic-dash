@@ -59,33 +59,10 @@ def _format_crypto_display(symbol, logo_file, price, pct_change, price_round=3, 
 
     return image
 
-
-def format_btc_usd_display(price, pct_change):
-    return _format_crypto_display('BTC/USD', 'btc-logo_32x32.png', price, pct_change)
-
-def format_eth_usd_display(price, pct_change):
-    return _format_crypto_display('ETH/USD', 'eth-logo_32x32.png', price, pct_change)
-
-def format_doge_usd_display(price, pct_change):
-    return _format_crypto_display('DOGE/USD', 'doge-logo_32x32.png', price, pct_change)
-
-def format_omg_usd_display(price, pct_change):
-    return _format_crypto_display('OMG/USD', 'omg-logo_32x32.png', price, pct_change)
-
-def format_nkn_usd_display(price, pct_change):
-    return _format_crypto_display('NKN/USD', 'nkn-logo_32x32.png', price, pct_change)
-
-def format_shib_usd_display(price, pct_change):
-    return _format_crypto_display('SHIB/USD', 'shib-logo_32x32.png', price, pct_change, price_round=7)
-
-def format_sol_usd_display(price, pct_change):
-    return _format_crypto_display('SOL/USD', 'sol-logo_32x32.png', price, pct_change)
-
-def format_boba_usd_display(price, pct_change):
-    return _format_crypto_display('BOBA/USD', 'boba-logo_32x32.png', price, pct_change)
-
-def format_matic_usd_display(price, pct_change):
-    return _format_crypto_display('MATIC/USD', 'matic-logo_32x32.png', price, pct_change)
+def format_crypto_display(display_name, image_file):
+    def format_crypto_display(price, pct_change):
+        return _format_crypto_display(display_name, image_file, price, pct_change)
+    return format_crypto_display
 
 def format_magiceden_logo():
     logo_file = '{0}/{1}/{2}'.format(CURRENT_DIR_PATH, 'logo', 'magiceden-full-logo.png')

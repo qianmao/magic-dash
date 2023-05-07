@@ -8,15 +8,15 @@ from PIL import Image
 
 
 CRYPTO_SYMBOL_FUNC_DICT = {
-    'btc/usd': [queryer.query_btc_usd, display_utils.format_btc_usd_display],
-    'eth/usd': [queryer.query_eth_usd, display_utils.format_eth_usd_display],
-    'doge/usd': [queryer.query_doge_usd, display_utils.format_doge_usd_display],
-    'omg/usd': [queryer.query_omg_usd, display_utils.format_omg_usd_display],
-    'nkn/usd': [queryer.query_nkn_usd, display_utils.format_nkn_usd_display],
-    'shib/usd': [queryer.query_shib_usd, display_utils.format_shib_usd_display],
-    'sol/usd': [queryer.query_sol_usd, display_utils.format_sol_usd_display],
-    'boba/usd': [queryer.query_boba_usd, display_utils.format_boba_usd_display],
-    'matic/usd': [queryer.query_matic_usd, display_utils.format_matic_usd_display]
+    'btc/usd': [queryer.query_coin_price('bitcoin', 'usd'), display_utils.format_crypto_display('BTC/USD', 'btc-logo_32x32.png')],
+    'eth/usd': [queryer.query_coin_price('ethereum', 'usd'), display_utils.format_crypto_display('ETH/USD', 'eth-logo_32x32.png')],
+    'doge/usd': [queryer.query_coin_price('dogecoin', 'usd'),display_utils.format_crypto_display('DOGE/USD', 'doge-logo_32x32.png')],
+    'omg/usd': [queryer.query_coin_price('omisego', 'usd'), display_utils.format_crypto_display('OMG/USD', 'omg-logo_32x32.png')],
+    'nkn/usd': [queryer.query_coin_price('nkn', 'usd'), display_utils.format_crypto_display('NKN/USD', 'nkn-logo_32x32.png')],
+    'shib/usd': [queryer.query_coin_price('shiba-inu', 'usd'), display_utils.format_crypto_display('SHIB/USD', 'shib-logo_32x32.png')],
+    'sol/usd': [queryer.query_coin_price('solana', 'usd'), display_utils.format_crypto_display('SOL/USD', 'sol-logo_32x32.png')],
+    'boba/usd': [queryer.query_coin_price('boba-network', 'usd'), display_utils.format_crypto_display('BOBA/USD', 'boba-logo_32x32.png')],
+    'matic/usd': [queryer.query_coin_price('matic-network', 'usd'), display_utils.format_crypto_display('MATIC/USD', 'matic-logo_32x32.png')]
 }
 
 ME_NFT_COLLECTION_ICON_IMAGE = {
@@ -45,11 +45,19 @@ IMAGE_TO_DISPLAY_DIR = '{0}/{1}'.format(CURRENT_DIR_PATH, 'images_to_display')
 
 LAMPORT_PER_SOL = 1000000000.0
 
+def _get_or_default(d, *keys, default=None):
+    try:
+        for k in keys:
+            d = d[k]
+    except (KeyError, IndexError):
+        return default
+    return d
+
 if __name__ == "__main__":
     with open(CONFIG_FILE) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
-        crypto_monitoring_list = list(config['monitoring_list']['crypto'])
-        nft_collection_monitoring_list = list(config['monitoring_list']['nft']['collection'])
+        crypto_monitoring_list = _get_or_default(config, 'monitoring_list', 'crypto') or []
+        nft_collection_monitoring_list = _get_or_default(config, 'monitoring_list', 'nft', 'collection') or []
 
         if len(crypto_monitoring_list) == 0 and len(nft_collection_monitoring_list) == 0:
             quit() 
@@ -60,6 +68,7 @@ if __name__ == "__main__":
         for crypto in crypto_monitoring_list:
            funcs = CRYPTO_SYMBOL_FUNC_DICT[crypto.lower()]
            price, pct_change = funcs[0]()
+           print(price, pct_change)
            image = funcs[1](price, pct_change)
            image_list.append(image)
            total_width += image.width
