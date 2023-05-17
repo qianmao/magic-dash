@@ -2,22 +2,10 @@ import display_utils
 import os
 import queryer
 import time
-import yaml
+import json
 
 from PIL import Image
 
-
-CRYPTO_SYMBOL_FUNC_DICT = {
-    'btc/usd': [queryer.query_coin_price('bitcoin', 'usd'), display_utils.format_crypto_display('BTC/USD', 'btc-logo_32x32.png')],
-    'eth/usd': [queryer.query_coin_price('ethereum', 'usd'), display_utils.format_crypto_display('ETH/USD', 'eth-logo_32x32.png')],
-    'doge/usd': [queryer.query_coin_price('dogecoin', 'usd'),display_utils.format_crypto_display('DOGE/USD', 'doge-logo_32x32.png')],
-    'omg/usd': [queryer.query_coin_price('omisego', 'usd'), display_utils.format_crypto_display('OMG/USD', 'omg-logo_32x32.png')],
-    'nkn/usd': [queryer.query_coin_price('nkn', 'usd'), display_utils.format_crypto_display('NKN/USD', 'nkn-logo_32x32.png')],
-    'shib/usd': [queryer.query_coin_price('shiba-inu', 'usd'), display_utils.format_crypto_display('SHIB/USD', 'shib-logo_32x32.png')],
-    'sol/usd': [queryer.query_coin_price('solana', 'usd'), display_utils.format_crypto_display('SOL/USD', 'sol-logo_32x32.png')],
-    'boba/usd': [queryer.query_coin_price('boba-network', 'usd'), display_utils.format_crypto_display('BOBA/USD', 'boba-logo_32x32.png')],
-    'matic/usd': [queryer.query_coin_price('matic-network', 'usd'), display_utils.format_crypto_display('MATIC/USD', 'matic-logo_32x32.png')]
-}
 
 ME_NFT_COLLECTION_ICON_IMAGE = {
     'monkelabs': 'https://cdn.magiceden.io/rs:fill:320:320:0:0/plain/https://dl.airtable.com/.attachmentThumbnails/37fd1a44d683784b3b6195f0e5dec266/8196493e',
@@ -40,7 +28,7 @@ ME_NFT_COLLECTION_NAME = {
 }
 
 CURRENT_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-CONFIG_FILE = '{0}/{1}'.format(CURRENT_DIR_PATH, 'config.yaml')
+CONFIG_FILE = '{0}/{1}'.format(CURRENT_DIR_PATH, 'config.json')
 IMAGE_TO_DISPLAY_DIR = '{0}/{1}'.format(CURRENT_DIR_PATH, 'images_to_display')
 
 LAMPORT_PER_SOL = 1000000000.0
@@ -55,9 +43,9 @@ def _get_or_default(d, *keys, default=None):
 
 if __name__ == "__main__":
     with open(CONFIG_FILE) as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-        crypto_monitoring_list = _get_or_default(config, 'monitoring_list', 'crypto') or []
-        nft_collection_monitoring_list = _get_or_default(config, 'monitoring_list', 'nft', 'collection') or []
+        config = json.load(f);
+        crypto_monitoring_list = _get_or_default(config, 'monitoringList', 'crypto') or []
+        nft_collection_monitoring_list = [] #_get_or_default(config, 'monitoringList', 'nft', 'collection') or []
 
         if len(crypto_monitoring_list) == 0 and len(nft_collection_monitoring_list) == 0:
             quit() 
@@ -66,10 +54,9 @@ if __name__ == "__main__":
         image_list = []
             
         for crypto in crypto_monitoring_list:
-           funcs = CRYPTO_SYMBOL_FUNC_DICT[crypto.lower()]
-           price, pct_change = funcs[0]()
+           price, pct_change = queryer.query_coin_price_vol(crypto['symbol'], crypto['currency'])
            print(price, pct_change)
-           image = funcs[1](price, pct_change)
+           image = display_utils.format_crypto_display(crypto['displayName'], crypto['logoFile'], price, pct_change)
            image_list.append(image)
            total_width += image.width
    

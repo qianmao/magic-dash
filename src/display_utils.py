@@ -22,11 +22,11 @@ SMALL_FONT_FILE = '{0}/{1}'.format(CURRENT_DIR_PATH, 'fonts/5x8.pil')
 SMALL_FONT = ImageFont.load(SMALL_FONT_FILE)
 SMALL_FONT_WIDTH = 5
 
-def _format_crypto_display(symbol, logo_file, price, pct_change, price_round=3, pct_change_round=2):
+def format_crypto_display(display_name, logo_file, price, pct_change, price_round=3, pct_change_round=2):
     logo_file = '{0}/{1}/{2}'.format(CURRENT_DIR_PATH, 'logo', logo_file)
     icon_image = Image.open(logo_file).convert('RGB')
 
-    headline = symbol
+    headline = display_name
     headline_width = len(headline) * LARGE_FONT_WIDTH
     headline_image = Image.new('RGB', (headline_width, 16))
     ImageDraw.Draw(headline_image).text((0, 0), headline, font=LARGE_FONT, fill=WHITE)
@@ -58,11 +58,6 @@ def _format_crypto_display(symbol, logo_file, price, pct_change, price_round=3, 
     image.paste(text_image, (buffer_width + icon_image.width + buffer_width, 0))
 
     return image
-
-def format_crypto_display(display_name, image_file):
-    def format_crypto_display(price, pct_change):
-        return _format_crypto_display(display_name, image_file, price, pct_change)
-    return format_crypto_display
 
 def format_magiceden_logo():
     logo_file = '{0}/{1}/{2}'.format(CURRENT_DIR_PATH, 'logo', 'magiceden-full-logo.png')
