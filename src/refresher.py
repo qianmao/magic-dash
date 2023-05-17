@@ -45,7 +45,7 @@ if __name__ == "__main__":
     with open(CONFIG_FILE) as f:
         config = json.load(f);
         crypto_monitoring_list = _get_or_default(config, 'monitoringList', 'crypto') or []
-        nft_collection_monitoring_list = [] #_get_or_default(config, 'monitoringList', 'nft', 'collection') or []
+        nft_collection_monitoring_list = _get_or_default(config, 'monitoringList', 'nft', 'collection') or []
 
         if len(crypto_monitoring_list) == 0 and len(nft_collection_monitoring_list) == 0:
             quit() 
@@ -53,12 +53,21 @@ if __name__ == "__main__":
         total_width = 0
         image_list = []
             
-        for crypto in crypto_monitoring_list:
-           price, pct_change = queryer.query_coin_price_vol(crypto['symbol'], crypto['currency'])
-           print(price, pct_change)
-           image = display_utils.format_crypto_display(crypto['displayName'], crypto['logoFile'], price, pct_change)
-           image_list.append(image)
-           total_width += image.width
+        if len(crypto_monitoring_list) > 0:
+            # simplify by using the first currency
+            currency = crypto_monitoring_list[0]['currency']
+            symbols = [crypto['symbol'] for crypto in crypto_monitoring_list]
+            # sample res: {'bitcoin': {'usd': 27148, 'usd_24h_change': 0.5085633935744746}, 'dogecoin': {'usd': 0.073448, 'usd_24h_change': 2.702105774485707}, 'ethereum': {'usd': 1828.91, 'usd_24h_change': 1.2609065596050957}}
+            batch_res = queryer.query_coin_price_vol_batch(symbols, currency)
+
+            for crypto in crypto_monitoring_list:
+                price = batch_res[crypto['symbol']][currency]
+                pct_change = batch_res[crypto['symbol']]['usd_24h_change']
+                print(price, pct_change)
+
+                image = display_utils.format_crypto_display(crypto['displayName'], crypto['logoFile'], price, pct_change)
+                image_list.append(image)
+                total_width += image.width
    
         if len(nft_collection_monitoring_list) > 0:
             image = display_utils.format_magiceden_logo()
